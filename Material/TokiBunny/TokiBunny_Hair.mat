@@ -136,6 +136,7 @@ Material:
     - _ZClip: 1
     - _ZTest: 4
     - _ZWrite: 1
+    - _remapIntensity: 1
     - _remapRange: 1
     - _specThreshold: 0.5
     m_Colors:

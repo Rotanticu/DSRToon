@@ -4,8 +4,8 @@ Shader "LitToon/LitToonBase"
     {
         [MainTexture] _MainTex ("MainTexture", 2D) = "white" {}
         [MainColor] _MainColor ("Main Color", Color) = (1,1,1,1)
-        _ShadowThreshold ("Shadow Threshold", Range(0, 1)) = 0.5
-        _remapRange ("Remap Range", Range(0, 1)) = 1
+        _ShadowThreshold ("Shadow Threshold", Range(0, 1)) = 0.1
+        _remapIntensity ("Remap Range", Range(0, 0.99)) = 0.5
         _SpecThreshold ("Specular Threshold", Range(0, 0.01)) = 0.002
         _RampMap ("Ramp Map", 2D) = "black" {}
         _DarkColor ("Dark Color", Color) = (0.2, 0.2, 0.2, 1)
@@ -52,7 +52,7 @@ Shader "LitToon/LitToonBase"
             half3 _SpecColor;
             half _SpecPower;
             half _SpecThreshold;
-            half _remapRange;
+            half _remapIntensity;
             float4 _MainTex_ST;
             CBUFFER_END
 
@@ -106,22 +106,25 @@ Shader "LitToon/LitToonBase"
             {
                 // light
                 Light light = GetMainLight(IN.shadowCoord,IN.positionWS,float4(1,1,1,1));
-                //采样纹理
+                //采样主纹理
                 half4 texColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv);  
-                // Shadow
+                // 亮暗面
                 float shadow = light.shadowAttenuation;
                 float ndotL = dot(IN.normalWS, light.direction);
                 half darkness = saturate(ndotL * shadow);
-                half3 colorDark = half3(0.2, 0.2, 0.2);
-                half3 colorLight = half3(1.0, 1.0, 1.0);
                 
-                
+                //重映射亮暗边界
+                //half3 diffuse = (darkness < _ShadowThreshold ? _DarkColor : _LightColor) * light.color.rgb * texColor.rgb;
+                //用smoothstep函数代替条件判断，平滑的从亮部过渡到暗部
                 half ifFlag = smoothstep(0.45,0.55,darkness - _ShadowThreshold);
+                half3 diffuse = (ifFlag * _LightColor + (1 - ifFlag) * _DarkColor) * light.color.rgb * texColor.rgb;
+                //使用remap贴图模仿PRR中的SSR效果
+                //类似这样的原画https://yande.re/post/show/1230691
                 half remapIfFlag = smoothstep(-0.2,1,darkness - _ShadowThreshold);
                 half3 remap = SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, float2(saturate(remapIfFlag),0.5)).rgb;
-                //half3 diffuse = (darkness < _ShadowThreshold ? _DarkColor : _LightColor) * light.color.rgb * texColor.rgb;
-                half3 diffuse = (ifFlag * _LightColor + (1 - ifFlag) * _DarkColor) * light.color.rgb * texColor.rgb;
-                diffuse = diffuse / (2 - _remapRange - (remap));
+                //颜色减淡（Color Dodge）混合模式 试了一堆只有这个不会太亮或太暗
+                //原公式f(a,b) = b / (1 - a) 为了能让参数有意义做了变形
+                diffuse = diffuse / (2 - _remapIntensity - (remap));
 
                 float3 halfDir = normalize(light.direction + IN.viewDirWS);
                 half3 specMask = darkness;
