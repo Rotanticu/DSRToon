@@ -12,7 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _USE_OBJECT_SPACE_BINORMAL_ON_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -105,6 +106,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _HairSpecScale: 0.0084
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -113,8 +115,9 @@ Material:
     - _ShadowThreshold: 0.1
     - _Smoothness: 0.279
     - _SmoothnessTextureChannel: 0
+    - _SpecOffset: 0
     - _SpecPower: 10
-    - _SpecThreshold: 0.002
+    - _SpecThreshold: 0.00524
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
@@ -132,20 +135,28 @@ Material:
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
     - _Surface: 0
+    - _USE_OBJECT_SPACE_BINORMAL: 0
+    - _USE_OBJECT_SPACE_BINORMAL_ON: 1
     - _WorkflowMode: 1
     - _ZClip: 1
     - _ZTest: 4
     - _ZWrite: 1
+    - _remapIntensity: 0.5
     - _remapRange: 1
     - _specThreshold: 0.555
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DarkColor: {r: 0.675, g: 0.70108694, b: 0.75, a: 1}
+    - _DarkColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _LightColor: {r: 0.88677275, g: 0.8829339, b: 0.929, a: 1}
+    - _HairSpecRingOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}
-    - _SpecColor: {r: 0.5346, g: 0.58212, b: 0.59400004, a: 1}
+    - _MainTexHSVTint: {r: -0.01, g: 0.08, b: -0.1, a: 1}
+    - _MainTexRGBTint: {r: 0, g: 0, b: 0, a: 1}
+    - _MainTexTint: {r: 0.5294118, g: 1, b: 0.21176471, a: 1}
+    - _SpecColor: {r: 0.165077, g: 0.23404813, b: 0.349, a: 1}
+    - _SpecOffset: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &172145608159523351
