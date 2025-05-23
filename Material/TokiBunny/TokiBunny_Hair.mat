@@ -148,10 +148,10 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DarkColor: {r: 0.755, g: 0.7206818, b: 0.64175, a: 1}
+    - _DarkColor: {r: 0.7, g: 0.5673202, b: 0.43921566, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HairSpecRingOffset: {r: 0.47, g: 0, b: 1.31, a: 89.87}
-    - _LightColor: {r: 0.98039216, g: 0.9551821, b: 0.9019608, a: 1}
+    - _LightColor: {r: 0.85, g: 0.8291667, b: 0.78333336, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}
     - _MainTexHSVTint: {r: 0.23, g: 1.84, b: 0.09, a: 1}
     - _MainTexRGBTint: {r: 0, g: 0, b: 0, a: 1}

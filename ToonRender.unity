@@ -171,6 +171,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: toki_bunny
       objectReference: {fileID: 0}
+    - target: {fileID: 3551160493546983832, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f3f0e5066fb807b4287f9918fa103da9, type: 2}
+    - target: {fileID: 3732521578489044320, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 6fe0f6a6bb9a1d341b801a54f590ac3d, type: 2}
+    - target: {fileID: 5649628453616628742, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 814ac3b2b9f80454984590d59787374e, type: 2}
+    - target: {fileID: 7310198251352563904, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2459a64650eb7fc4dbe6eb055715b6c0, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -271,7 +287,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 6570
+  m_ColorTemperature: 5316
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -290,13 +306,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 528859256}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.42243224, y: -0.026887516, z: 0.012537854, w: 0.90590894}
+  m_LocalRotation: {x: 0.40821788, y: 0.23456976, z: -0.10938167, w: 0.8754261}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: 716.6, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: 30, z: 0}
 --- !u!1 &775116048
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ Shader "LitToon/LitToonBase"
         [MainTexture] _MainTex ("MainTexture", 2D) = "white" {}
         _MainTexHSVTint ("Main Tex HSV Tint", Vector) = (0,0,0,1)
         [MainColor] _MainColor ("Main Color", Color) = (1,1,1,1)
-        _ShadowThreshold ("Shadow Threshold", Range(0, 1)) = 0.1
+        _ShadowThreshold ("Shadow Threshold", Range(-1, 1)) = 0.1
         _ShadowThresholdSmooothRange ("Shadow Threshold Smoooth Range", Vector) = (0.45,0.55,0)
         _remapIntensity ("Remap Range", Range(0, 0.99)) = 0.5
         _SpecThreshold ("Specular Threshold", Range(0, 0.01)) = 0.002
@@ -153,11 +153,12 @@ Shader "LitToon/LitToonBase"
                 //half3 diffuse = (darkness < _ShadowThreshold ? _DarkColor : _LightColor) * light.color.rgb * texColor.rgb;
                 //用smoothstep函数代替条件判断，平滑的从亮部过渡到暗部
                 half ifFlag = smoothstep(_ShadowThresholdSmooothRange.x,_ShadowThresholdSmooothRange.y,darkness - _ShadowThreshold);
+                ifFlag = saturate(ifFlag);
                 
                 half3 diffuse = (ifFlag * _LightColor + (1 - ifFlag) * _DarkColor) * light.color.rgb * texColor.rgb;
                 //使用remap贴图模仿PRR中的SSR效果
                 //类似这样的原画https://yande.re/post/show/1230691
-                half remapIfFlag = smoothstep(-0.2,1,darkness - _ShadowThreshold);
+                half remapIfFlag = smoothstep(-0.2,1,(darkness - saturate(_ShadowThreshold)));
                 half3 remap = SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, float2(saturate(remapIfFlag),0.5)).rgb;
                 //颜色减淡（Color Dodge）混合模式 试了一堆只有这个不会太亮或太暗
                 //原公式f(a,b) = b / (1 - a) 为了能让参数有意义做了变形
