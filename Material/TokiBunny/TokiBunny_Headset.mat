@@ -11,7 +11,8 @@ Material:
   m_Shader: {fileID: 4800000, guid: de117ec717720174faaeb20397ebe37c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _USE_OBJECT_SPACE_BINORMAL_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -105,6 +106,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _HairSpecScale: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
@@ -132,10 +134,12 @@ Material:
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
     - _Surface: 0
+    - _USE_OBJECT_SPACE_BINORMAL: 1
     - _WorkflowMode: 1
     - _ZClip: 1
     - _ZTest: 4
     - _ZWrite: 1
+    - _remapIntensity: 0.5
     - _remapRange: 1
     - _specThreshold: 0.462
     m_Colors:
@@ -143,8 +147,12 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DarkColor: {r: 0.953, g: 0.953, b: 0.953, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _HairSpecRingOffset: {r: 0, g: 0, b: 0, a: 0}
     - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MainTexHSVTint: {r: 0, g: 0, b: 0, a: 1}
+    - _MainTexRGBTint: {r: 0, g: 0, b: 0, a: 1}
+    - _ShadowThresholdSmooothRange: {r: 0.45, g: 0.55, b: 0, a: 1}
     - _SpecColor: {r: 0.3604874, g: 0.37532818, b: 0.505, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -4,7 +4,6 @@ Shader "LitToon/LitToonBase"
     {
         [MainTexture] _MainTex ("MainTexture", 2D) = "white" {}
         _MainTexHSVTint ("Main Tex HSV Tint", Vector) = (0,0,0,1)
-        _MainTexRGBTint ("Main Tex RGB Tint", Vector) = (0,0,0,1)
         [MainColor] _MainColor ("Main Color", Color) = (1,1,1,1)
         _ShadowThreshold ("Shadow Threshold", Range(0, 1)) = 0.1
         _ShadowThresholdSmooothRange ("Shadow Threshold Smoooth Range", Vector) = (0.45,0.55,0)
@@ -53,7 +52,6 @@ Shader "LitToon/LitToonBase"
             CBUFFER_START(UnityPerMaterial)
             half4 _MainColor;
             half4 _MainTexHSVTint;
-            half4 _MainTexRGBTint;
             half _ShadowThreshold;
             half4 _ShadowThresholdSmooothRange;
             half3 _DarkColor;
@@ -146,7 +144,6 @@ Shader "LitToon/LitToonBase"
                 //采样主纹理
                 half4 texColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv);
                 texColor.rgb = HsvToRgb(RgbToHsv(texColor) - 2 * _MainTexHSVTint.rgb);
-                texColor.rgb = texColor.rgb + _MainTexRGBTint.rgb;
                 // 亮暗面
                 float shadow = light.shadowAttenuation;
                 float ndotL = dot(IN.normalWS, light.direction);
@@ -165,6 +162,8 @@ Shader "LitToon/LitToonBase"
                 //颜色减淡（Color Dodge）混合模式 试了一堆只有这个不会太亮或太暗
                 //原公式f(a,b) = b / (1 - a) 为了能让参数有意义做了变形
                 diffuse = diffuse / (2 - _remapIntensity - (remap));
+
+                //return half4(diffuse,1);
 
                 float3 halfDir = normalize(light.direction + IN.viewDirWS);
                 half3 specMask = darkness;
