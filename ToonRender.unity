@@ -141,15 +141,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2333787892843768609, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: -0.13831003
       objectReference: {fileID: 0}
     - target: {fileID: 2333787892843768609, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2333787892843768609, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: -0.990389
       objectReference: {fileID: 0}
     - target: {fileID: 2333787892843768609, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
       propertyPath: m_LocalRotation.z
@@ -161,7 +161,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2333787892843768609, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: 1244.1
       objectReference: {fileID: 0}
     - target: {fileID: 2333787892843768609, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -805,7 +805,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &1332320454
 SphereCollider:
   m_ObjectHideFlags: 0
