@@ -2,21 +2,36 @@ Shader "LitToon/LitToonBase"
 {
     Properties
     {
+        [Header(Diffuse)]
         [MainTexture] _MainTex ("MainTexture", 2D) = "white" {}
         _MainTexHSVTint ("Main Tex HSV Tint", Vector) = (0,0,0,1)
         [MainColor] _MainColor ("Main Color", Color) = (1,1,1,1)
         _ShadowThreshold ("Shadow Threshold", Range(-1, 1)) = 0.1
         _ShadowThresholdSmooothRange ("Shadow Threshold Smoooth Range", Vector) = (0.45,0.55,0)
-        _remapIntensity ("Remap Range", Range(0, 0.99)) = 0.5
-        _SpecThreshold ("Specular Threshold", Range(0, 0.01)) = 0.002
-        _RampMap ("Ramp Map", 2D) = "black" {}
+
         _DarkColor ("Dark Color", Color) = (0.2, 0.2, 0.2, 1)
         _LightColor ("Light Color", Color) = (1, 1, 1, 1)
+
+        [Header(Specular)]
         _SpecColor ("Specular Color", Color) = (1, 1, 1, 1)
         _SpecPower ("Specular Power", Range(0, 128)) = 16
+        _SpecThreshold ("Specular Threshold", Range(0, 0.01)) = 0.002
+
+        _RampMap ("Ramp Map", 2D) = "black" {}
+        _RemapIntensity ("Remap Intensity", Range(0, 0.99)) = 0.5
+
+        [Header(HairSpecRing)]
         _HairSpecRingOffset ("Hair SpecRing Offset", Vector) = (0,0,0,0)
         _HairSpecScale ("Hair SpecRing  Scale", Range(0, 0.1)) = 0
         [Toggle] _USE_OBJECT_SPACE_BINORMAL ("USE_OBJECT_SPACE_BINORMAL", int) = 1
+
+        //Stencil enum
+        [Header(Stencil)]
+        [IntRange]_Stencil ("Stencil ID", Range(0,255)) = 0
+        [Enum(UnityEngine.Rendering.CompareFunction)]_StencilComp("StencilComp", Float) = 0.0
+        [Enum(UnityEngine.Rendering.StencilOp)]_StencilOp("StencilOp", Float) = 0.0
+        // [Enum(UnityEngine.Rendering.StencilOp)]_StencilOpFail("StencilOpFail", Float) = 0.0
+        // [Enum(UnityEngine.Rendering.StencilOp)]_StencilOpZFail("StencilOpZFail", Float) = 0.0
     }
 
     SubShader
@@ -35,6 +50,15 @@ Shader "LitToon/LitToonBase"
 				"LightMode"="UniversalForward"
 			}
 
+            
+            Stencil
+            {
+                Ref [_Stencil]
+                Comp [_StencilComp]
+                Pass [_StencilOp]
+                // Fail [_StencilOpFail]
+                // ZFail [_StencilOpZFail]
+            }
             //Geometry
             ZWrite On
             ZTest LEqual
@@ -61,7 +85,7 @@ Shader "LitToon/LitToonBase"
             half4 _HairSpecRingOffset;
             half _HairSpecScale;
             half _SpecThreshold;
-            half _remapIntensity;
+            half _RemapIntensity;
             float4 _MainTex_ST;
             CBUFFER_END
 
@@ -108,6 +132,13 @@ Shader "LitToon/LitToonBase"
                 OUT.uv = TRANSFORM_TEX(IN.uv, _MainTex);
                 VertexPositionInputs positionInputs = GetVertexPositionInputs(IN.positionOS.xyz);
                 OUT.positionCS = positionInputs.positionCS;
+                //_Eyebrow Offset
+                // float3 positionVS = positionInputs.positionVS;
+                // positionVS.z += _EyebrowOffsetZ;
+                // float4 offSetPositionCS = TransformWViewToHClip(positionVS);
+                // float depth = offSetPositionCS.z / offSetPositionCS.w;
+                // OUT.positionCS.z = depth * OUT.positionCS.w;//把偏移后的深度赋值到裁切空间
+
                 OUT.positionWS = positionInputs.positionWS;
                 float3 viewDirWS = cameraPositionWS - positionInputs.positionWS;
                 OUT.viewDirWS = viewDirWS;
@@ -162,7 +193,7 @@ Shader "LitToon/LitToonBase"
                 half3 remap = SAMPLE_TEXTURE2D(_RampMap, sampler_RampMap, float2(saturate(remapIfFlag),0.5)).rgb;
                 //颜色减淡（Color Dodge）混合模式 试了一堆只有这个不会太亮或太暗
                 //原公式f(a,b) = b / (1 - a) 为了能让参数有意义做了变形
-                diffuse = diffuse / (2 - _remapIntensity - (remap));
+                diffuse = diffuse / (2 - _RemapIntensity - (remap));
 
                 //return half4(diffuse,1);
 

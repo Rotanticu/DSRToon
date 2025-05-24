@@ -179,6 +179,18 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 6fe0f6a6bb9a1d341b801a54f590ac3d, type: 2}
+    - target: {fileID: 4386050363928799196, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4386050363928799196, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4981695396176721960, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1c0e7abcc19379d4488b3e78792eb0ff, type: 2}
     - target: {fileID: 5649628453616628742, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -187,6 +199,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 2459a64650eb7fc4dbe6eb055715b6c0, type: 2}
+    - target: {fileID: 8870220563202665298, guid: 6b7bd46fc26342f469ed13af9a7d7c40, type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -715,7 +731,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.70436484, g: 0.43710685, b: 1, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -873,7 +889,7 @@ Transform:
   m_GameObject: {fileID: 1332320453}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.736, y: 0.92566705, z: -7.6822033}
+  m_LocalPosition: {x: 0.733, y: 1.388, z: -8.314}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
