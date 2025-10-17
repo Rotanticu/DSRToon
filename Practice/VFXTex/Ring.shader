@@ -82,6 +82,7 @@ Shader "VFXTex/Ring"
             half4 frag (Varings IN) : SV_Target
             {
                 float t = sin(length(IN.uv - 0.5) * _Frequency + _Time.y * _TimeSpeed);
+                //float t = cWidth / abs(cRadius - length(IN.uv - 0.5));
                 float _PowerExponent = pow((1 - _Width) * 100,1/2.2);
                 float soft = pow(saturate(t),  _PowerExponent);
                 float hard = step(_Softness, soft);
