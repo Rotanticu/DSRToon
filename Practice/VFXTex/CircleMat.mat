@@ -24,7 +24,12 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _CircleType: 2
+    - _Radius: 0.69
+    - _Softness: 0.14
+    - _powerExponent: 100
+    - _softness: 0.105
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

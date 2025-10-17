@@ -1,4 +1,4 @@
-Shader "Custom/MyCustomURPShaderTemplate"
+Shader "VFXTex/Circle"
 {
     Properties
     {
