@@ -7,6 +7,9 @@ Shader "VFXTex/Gradation"
         _PowerExponent("Power Exponent", Range(0, 100)) = 15.0
         _Threshold("Threshold", Range(0, 1)) = 0.5
         _Tolerance("Tolerance", Range(0, 1)) = 0.01
+        _Offset("Offset", Range(-1, 1)) = 0
+        _Width("Width", Range(0, 1)) = 1
+        _Random("Random", Range(0, 1)) = 0
     }
 
     SubShader
@@ -36,6 +39,7 @@ Shader "VFXTex/Gradation"
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "NoiseLibrary.hlsl"
 
             struct Attributes
             {
@@ -53,6 +57,9 @@ Shader "VFXTex/Gradation"
             float _PowerExponent;
             float _Threshold;
             float _Tolerance;
+            float _Offset;
+            float _Random;
+            float _Width;
             Varings vert (Attributes IN)
             {
                 Varings OUT;
@@ -64,7 +71,6 @@ Shader "VFXTex/Gradation"
 
             half4 frag (Varings IN) : SV_Target
             {
-                //"float len = length(_Direction);if (len == 0.0) { pout.color = vec3(1.0); } else { vec2 n = normalize(_Direction); vec2 pos = pin.position - (-_Direction); float t = (dot(pos, n) * 0.5) / len; t = pow(t, _PowerExponent); pout.color = vec3(t); }"
                 float2 _Direction = float2(_DirectionX, _DirectionY);
                 float len = length(_Direction);
                 float t = 0.0;
@@ -74,7 +80,11 @@ Shader "VFXTex/Gradation"
                 else {
                     float2 n = normalize(_Direction);
                     float2 pos = IN.uv + _Direction;
-                    t = (dot(pos, n) * 0.5) / len;
+                    t = (dot(pos, n) * 0.5 + _Offset) / len;
+                    float widthSize = rcp(pow(0.9, (1.0 - _Width) * 100.0));
+                    widthSize = floor(IN.uv.x * widthSize) / widthSize;
+                    float random = (rand(float2(widthSize,0.0)) + EPSILON) * _Random;
+                    t = rcp(1.0 - random) * (t - random);
                     t = pow(t, _PowerExponent);
                 }
                 t = smoothstep(_Threshold - _Tolerance, _Threshold + _Tolerance, t);
