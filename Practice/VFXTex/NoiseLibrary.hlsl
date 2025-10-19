@@ -7,77 +7,68 @@
 // 这是一个用于学习Shader噪声效果的代码库
 // 包含各种噪声函数的实现和应用示例
 
-// ========================================
-// 基础数学函数
-// ========================================
-
-// 常量定义 - 使用条件编译防止重复定义
-#ifndef PI
-#define PI 3.14159265359
-#endif
-
-#ifndef PI2
-#define PI2 6.28318530718
-#endif
-
-#ifndef RECIPROCAL_PI
-#define RECIPROCAL_PI 0.31830988618
-#endif
-
-#ifndef RECIPROCAL_PI2
-#define RECIPROCAL_PI2 0.15915494309
-#endif
-
-#ifndef EPSILON
-#define EPSILON 1e-6
-#endif
-
-// 工具函数
-float pow2(float x) { return x * x; }
-float pow3(float x) { return x * x * x; }
-float pow4(float x) { float x2 = x * x; return x2 * x2; }
-float pow5(float x) { float x2 = x * x; return x2 * x2 * x; }
-float average(float3 color) { return dot(color, float3(0.3333, 0.3333, 0.3333)); }
-float2 UVToPolar(float2 uv,float2 center) 
-{ 
-    float2 delta = uv - center;
-    float radius = length(delta);//0~√0.5
-    float angle = atan2(delta.x, delta.y) * RECIPROCAL_PI2;//-0.5~0.5
-    return float2(radius, angle);
-}
-// ========================================
-// 基础随机函数
-// ========================================
-
-// 基础随机函数 - 来自EffectTextureMaker
-float rand(float2 uv)
-{
-    const float a = 12.9898, b = 78.233, c = 43758.5453;
-    float dt = dot(uv.xy, float2(a, b));
-    float sn = fmod(dt, PI);
-    return frac(sin(sn) * c);
-}
-
-// 2D随机函数
-float rand2D(float2 p)
-{
-    return frac(sin(dot(p, float2(12.9898, 78.233))) * 43758.5453);
-}
-
-// 3D随机函数
-float rand3D(float3 p)
-{
-    return frac(sin(dot(p, float3(12.9898, 78.233, 37.719))) * 43758.5453);
-}
+// 包含通用数学库
+#include "Common.hlsl"
 
 // ========================================
 // 基础噪声函数
 // ========================================
 
-// TODO: 在这里添加基础噪声函数
-// - noise2D()
-// - noise3D()
-// - smoothNoise()
+// 基础2D噪声
+float noise2D(float2 p)
+{
+    float2 i = floor(p);
+    float2 f = frac(p);
+    
+    // 四个角的值
+    float a = rand2D(i);
+    float b = rand2D(i + float2(1.0, 0.0));
+    float c = rand2D(i + float2(0.0, 1.0));
+    float d = rand2D(i + float2(1.0, 1.0));
+    
+    // 双线性插值
+    float2 u = f * f * (3.0 - 2.0 * f);
+    return lerp(lerp(a, b, u.x), lerp(c, d, u.x), u.y);
+}
+
+// 基础3D噪声
+float noise3D(float3 p)
+{
+    float3 i = floor(p);
+    float3 f = frac(p);
+    
+    // 八个角的值
+    float a = rand3D(i);
+    float b = rand3D(i + float3(1.0, 0.0, 0.0));
+    float c = rand3D(i + float3(0.0, 1.0, 0.0));
+    float d = rand3D(i + float3(1.0, 1.0, 0.0));
+    float e = rand3D(i + float3(0.0, 0.0, 1.0));
+    float f_val = rand3D(i + float3(1.0, 0.0, 1.0));
+    float g = rand3D(i + float3(0.0, 1.0, 1.0));
+    float h = rand3D(i + float3(1.0, 1.0, 1.0));
+    
+    // 三线性插值
+    float3 u = f * f * (3.0 - 2.0 * f);
+    return lerp(lerp(lerp(a, b, u.x), lerp(c, d, u.x), u.y),
+               lerp(lerp(e, f_val, u.x), lerp(g, h, u.x), u.y), u.z);
+}
+
+// 平滑噪声
+float smoothNoise2D(float2 p)
+{
+    float2 i = floor(p);
+    float2 f = frac(p);
+    
+    // 使用smoothstep进行插值
+    float2 u = f * f * (3.0 - 2.0 * f);
+    
+    float a = rand2D(i);
+    float b = rand2D(i + float2(1.0, 0.0));
+    float c = rand2D(i + float2(0.0, 1.0));
+    float d = rand2D(i + float2(1.0, 1.0));
+    
+    return lerp(lerp(a, b, u.x), lerp(c, d, u.x), u.y);
+}
 
 // ========================================
 // 分形布朗运动 (FBM)

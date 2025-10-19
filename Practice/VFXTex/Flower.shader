@@ -38,7 +38,7 @@ Shader "VFXTex/Flower"
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "NoiseLibrary.hlsl"
+            #include "Common.hlsl"
             struct Attributes
             {
                 float4 positionOS : POSITION;

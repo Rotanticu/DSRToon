@@ -33,7 +33,7 @@ Shader "VFXTex/Star"
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "NoiseLibrary.hlsl"
+            #include "Common.hlsl"
             
             struct Attributes
             {
