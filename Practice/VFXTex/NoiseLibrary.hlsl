@@ -41,7 +41,7 @@ float average(float3 color) { return dot(color, float3(0.3333, 0.3333, 0.3333));
 float2 UVToPolar(float2 uv,float2 center) 
 { 
     float2 delta = uv - center;
-    float radius = length(delta);//0~1
+    float radius = length(delta);//0~√0.5
     float angle = atan2(delta.x, delta.y) * RECIPROCAL_PI2;//-0.5~0.5
     return float2(radius, angle);
 }
