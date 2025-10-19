@@ -159,12 +159,12 @@ float prng(float2 seed)
 // voronoise    u=1,v=1
 // More info here: http://iquilezles.org/www/articles/voronoise/voronoise.htm
 // psudo-random number generator
-float iqhash2(float2 p)
+float iqhash(float2 p)
 {
   float2 q = float2(dot(p, float2(127.1,311.7)), dot(p, float2(269.5,183.3)));
   return abs(frac(sin(q.x*q.y)*43758.5453123)-0.5)*2.0;
 }
-float2 iqhash2vec(float2 p)
+float2 iqhash2(float2 p)
 {
   float2 q = float2(dot(p, float2(127.1,311.7)), dot(p, float2(269.5,183.3)));
   return -1.0 + 2.0 * frac(sin(q)*43758.5453123);
