@@ -27,6 +27,10 @@
 #define RECIPROCAL_PI2 0.15915494309
 #endif
 
+#ifndef LOG2
+#define LOG2 1.442695
+#endif
+
 #ifndef EPSILON
 #define EPSILON 1e-6
 #endif
@@ -36,13 +40,22 @@
 // ========================================
 
 // 幂函数
-float pow2(float x) { return x * x; }
-float pow3(float x) { return x * x * x; }
-float pow4(float x) { float x2 = x * x; return x2 * x2; }
-float pow5(float x) { float x2 = x * x; return x2 * x2 * x; }
+// 计算x的平方
+float pow2(float x)
+{ return x * x; }
+// 计算x的立方
+float pow3(float x)
+{ return x * x * x; }
+// 计算x的四次方
+float pow4(float x)
+{ float x2 = x * x; return x2 * x2; }
+// 计算x的五次方
+float pow5(float x)
+{ float x2 = x * x; return x2 * x2 * x; }
 
-// 颜色工具
-float average(float3 color) { return dot(color, float3(0.3333, 0.3333, 0.3333)); }
+// 计算RGB颜色的亮度平均值
+float average(float3 color)
+{ return dot(color, float3(0.3333, 0.3333, 0.3333)); }
 
 // ========================================
 // 坐标转换函数
@@ -70,27 +83,26 @@ float2 PolarToUV(float2 polar, float2 center)
 // 基础随机函数
 // ========================================
 
-// 基础随机函数 - 来自EffectTextureMaker
-float rand(float2 uv)
+// 基础随机函数
+// 1D随机数生成器，返回[0,1]范围的值
+float simpleRand(float x) 
 {
-    const float a = 12.9898, b = 78.233, c = 43758.5453;
-    float dt = dot(uv.xy, float2(a, b));
-    float sn = fmod(dt, PI);
-    return frac(sin(sn) * c);
+  return frac(sin(x) * 4358.5453123);
 }
-
-// 2D随机函数
-float rand2D(float2 p)
+// 1D随机数生成器（余弦版本），返回[0,1]范围的值
+float simpleRand2(float n) 
 {
-    return frac(sin(dot(p, float2(12.9898, 78.233))) * 43758.5453);
+  return frac(cos(n*89.42) * 343.32);
 }
-
-// 3D随机函数
-float rand3D(float3 p)
+// 高质量2D随机数生成器
+// 期望输入值在[0,1]x[0,1]范围内，返回[0,1]范围的值
+// 不要合并为单个函数，参考: http://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/
+float rand(float2 uv) 
 {
-    return frac(sin(dot(p, float3(12.9898, 78.233, 37.719))) * 43758.5453);
+  float a = 12.9898, b = 78.233, c = 43758.5453;
+  float dt = dot(uv.xy, float2(a,b)), sn = fmod(dt, PI);
+  return frac(sin(sn) * c);
 }
-
 // ========================================
 // 插值函数
 // ========================================
@@ -105,6 +117,68 @@ float smoothstep3(float x)
 float smoothstep5(float x)
 {
     return x * x * x * (x * (x * 6.0 - 15.0) + 10.0);
+}
+
+
+// 余弦插值函数
+// 在a和b之间进行余弦插值
+float cosine(float a, float b, float x) 
+{
+  float f = (1.0 - cos(x * PI)) * 0.5;
+  return a * (1.0 - f) + b * f;
+}
+
+// 双线性余弦插值
+// 在四个角点之间进行双线性余弦插值
+float bicosine(float tl, float tr, float bl, float br, float x, float y) 
+{
+  return cosine(cosine(tl,tr,x), cosine(bl,br,x), y);
+}
+
+
+
+// 双线性插值
+// 在四个角点之间进行双线性插值
+float bilinear(float tl, float tr, float bl, float br, float x, float y) 
+{
+  return lerp(lerp(tl,tr,x), lerp(bl,br,x), y);
+}
+
+// 三次插值函数（smoothstep）
+// 在a和b之间进行三次插值，提供平滑过渡
+float cubic(float a, float b, float x)
+{
+  float f = x*x*(3.0 - 2.0*x); // 3x^2 + 2x
+  return a * (1.0 - f) + b * f;
+}
+
+// 双三次插值
+// 在四个角点之间进行双三次插值
+float bicubic(float tl, float tr, float bl, float br, float x, float y)
+{
+  return cubic(cubic(tl,tr,x), cubic(bl,br,x), y);
+}
+
+// 五次插值函数
+// 在a和b之间进行五次插值，提供更平滑的过渡
+float quintic(float a, float b, float x)
+{
+  float f = x*x*x*(x*(x*6.0 - 15.0)+10.0); // 6x^5 - 15x^4 + 10x^3
+  return a * (1.0 - f) + b * f;
+}
+
+// 双五次插值
+// 在四个角点之间进行双五次插值
+float biquintic(float tl, float tr, float bl, float br, float x, float y)
+{
+  return quintic(quintic(tl,tr,x), quintic(bl,br,x), y);
+}
+
+// 双线性混合
+// 在四个角点之间进行双线性混合（使用mix函数）
+float bimix(float tl, float tr, float bl, float br, float x, float y)
+{
+  return lerp(lerp(tl,tr,x), lerp(bl,br,x), y);
 }
 
 // ========================================
@@ -129,6 +203,55 @@ float chebyshevDistance(float2 a, float2 b)
 {
     float2 diff = abs(a - b);
     return max(diff.x, diff.y);
+}
+
+// 方向向量变换
+// 使用变换矩阵变换方向向量（不包含位移）
+float3 transformDirection(float3 dir, float4x4 directionMatrix)
+{
+  return normalize(mul(directionMatrix, float4(dir, 0.0)).xyz);
+}
+
+// 逆方向向量变换
+// 使用逆变换矩阵变换方向向量（不包含位移）
+// http://en.wikibooks.org/wiki/GLSL_Programming/Applying_Matrix_Transformations
+float3 inverseTransformDirection(float3 dir, float4x4 directionMatrix)
+{
+  return normalize(mul(float4(dir, 0.0), directionMatrix).xyz);
+}
+
+// 点在平面上的投影
+// 将点投影到指定平面上
+float3 projectOnPlane(float3 pos, float3 pointOnPlane, float3 planeNormal)
+{
+  float distance = dot(planeNormal, pos - pointOnPlane);
+  return -distance * planeNormal + pos;
+}
+
+// 判断点在平面的哪一侧
+// 返回1表示在法向量指向的一侧，-1表示在另一侧，0表示在平面上
+float sideOfPlane(float3 pos, float3 pointOnPlane, float3 planeNormal)
+{
+  return sign(dot(pos - pointOnPlane, planeNormal));
+}
+
+// 直线与平面的交点
+// 计算直线与平面的交点坐标
+float3 linePlaneIntersect(float3 pointOnLine, float3 lineDirection, float3 pointOnPlane, float3 planeNormal)
+{
+  return lineDirection * (dot(planeNormal, pointOnPlane - pointOnLine) / dot(planeNormal, lineDirection)) + pointOnLine;
+}
+
+// 伽马校正函数
+// 将伽马空间颜色转换为线性空间颜色
+float4 GammaToLinear(float4 value, float gammaFactor)
+{
+  return float4(pow(value.xyz, gammaFactor), value.w);
+}
+// 将线性空间颜色转换为伽马空间颜色
+float4 LinearToGamma(float4 value, float gammaFactor)
+{
+  return float4(pow(value.xyz, 1.0/gammaFactor), value.w);
 }
 
 #endif // COMMON_INCLUDED
