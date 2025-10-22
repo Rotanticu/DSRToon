@@ -25,6 +25,9 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _NoiseFrequency: 54.1
+    - _NoiseOctave: 4.07
+    - _NoisePersistence: 49.6
     - _TimeSpeed: 0
     m_Colors:
     - _Vector: {r: 0.86, g: 1, b: 0, a: 0}

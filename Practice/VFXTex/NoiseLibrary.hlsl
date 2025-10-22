@@ -14,10 +14,10 @@
 #define NOISE_OCTAVE_MAX 10
 #endif
 
-uniform int cNoiseOctave;
-uniform float cNoiseFrequency;
+//uniform int cNoiseOctave;
+//uniform float cNoiseFrequency;
 //uniform float cNoiseAmplitude;
-uniform float cNoisePersistence;
+//uniform float cNoisePersistence;
 //uniform bool cNoiseGraphEnable;
 
 
@@ -60,21 +60,6 @@ float plerp(float2 p)
 //   return cosine(cosine(v.x, v.y, f.x), cosine(v.z, v.w, f.x), f.y);
 }
 
-// 分形Perlin噪声
-// 使用多个八度生成分形噪声
-float pnoise(float2 p)
-{
-  float t = 0.0;
-  for (int i=0; i<NOISE_OCTAVE_MAX; i++)
-{
-    if (i >= cNoiseOctave) break;
-    float freq = pow(2.0, float(i));
-    float amp = pow(cNoisePersistence, float(cNoiseOctave - i));
-    t += plerp(float2(p.x / freq, p.y / freq)) * amp;
-  }
-  return t;
-}
-
 // 参数化Perlin噪声
 // 可自定义八度数、频率和持续性的Perlin噪声
 float pnoise(float2 p, int octave, float frequency, float persistence)
@@ -91,6 +76,13 @@ float pnoise(float2 p, int octave, float frequency, float persistence)
     amplitude *= persistence;
   }
   return t / maxAmplitude;
+}
+
+// 分形Perlin噪声
+// 使用多个八度生成分形噪声
+float pnoise(float2 p)
+{
+  return pnoise(p, 10,1,1);
 }
 
 // 脊状噪声
