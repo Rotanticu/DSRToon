@@ -4,9 +4,9 @@ Shader "Custom/MyCustomURPShaderTemplate"
     {
         _Vector("Vector", Vector) = (0, 0, 0, 0)
         _TimeSpeed("Time Speed", Float) = 0.1
-        _NoiseOctave("Noise Octave", Int) = 6
-        _NoiseFrequency("Noise Frequency", Float) = 1
-        _NoisePersistence("Noise Persistence", Float) = 1
+        _Intensity("Intensity", Float) = 1
+        _PowerExponent("Power Exponent", Float) = 1
+        _Size("Size", Float) = 1
     }
 
     SubShader
@@ -53,9 +53,9 @@ Shader "Custom/MyCustomURPShaderTemplate"
 
             float4 _Vector;
             float _TimeSpeed;
-            int _NoiseOctave;
-            float _NoiseFrequency;
-            float _NoisePersistence;
+            float _Intensity;
+            float _PowerExponent;
+            float _Size;
             Varings vert (Attributes IN)
             {
                 Varings OUT;
@@ -67,24 +67,15 @@ Shader "Custom/MyCustomURPShaderTemplate"
                 return OUT;
             }
 
+
             half4 frag (Varings IN) : SV_Target
             {
-                float2 p = IN.uv + _Time.y * _TimeSpeed;
-                // float t = 0.0;
-                // float maxAmplitude = EPSILON;
-                // float amplitude = 1.0;
-                // float frequency = _NoiseFrequency;
-                // for (int i=0; i<10; i++)
-                // {
-                //   if (i >= _NoiseOctave) break;
-                //   t += plerp(floor(p * frequency)) * amplitude;
-                //   frequency *= 2.0;
-                //   maxAmplitude += amplitude;
-                //   amplitude *= _NoisePersistence;
-                // }
-                // t = t / maxAmplitude;
-                //return t / maxAmplitude;
-                float t = pnoise(floor(IN.uv * _NoiseFrequency) + _Time.y * _TimeSpeed,_NoiseOctave,_NoiseFrequency,_NoisePersistence);
+                // // http://glslsandbox.com/e#37373.0
+                // float t = fworley(IN.uv, _Size, _TimeSpeed) * _Intensity;
+                // t = pow(t, _PowerExponent);
+                // return half4(t, t, t, 1);
+
+                float t = pnoise((IN.uv * 6) + _Time.y * _TimeSpeed,4,6,1);
                 return half4(t, t, t, 1);
             }
             ENDHLSL

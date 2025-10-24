@@ -126,10 +126,24 @@ float sn = fmod(dt, PI);
 return frac(sin(sn) * c);
 ```
 ### <span style="color: var(--color-h3)">CELLNOISE - 单元噪声</span>
-**类型:** 基于网格的噪声
-**特点:** 在每个网格单元内返回恒定值
-**用途:** 生成砖块纹理、网格效果、随机色块
-
+**类型:** 基于均匀分布的随机点最短距离的噪声
+**特点:** 类似SDF的实现原理，根据距离着色
+**用途:** 生成细胞效果或者随机色块
+```hlsl
+for (int xo=-1; xo <= 1; ++xo) // 3x3搜索网格
+{ 
+    for (int yo=-1; yo <= 1; ++yo) 
+    { 
+        float2 tp = floor(p) + float2(xo, yo); 
+        float temp = min(d, lengthSqr(p - tp - rand(tp) * _RandomOffset));
+        if (temp < d)
+        {
+            d = temp; //找离9个特征点最近的距离
+            color = float3(rand(tp - 1),rand(tp),rand(tp + 1)); //也可以作为色块
+        }
+    }
+}
+```
 ### <span style="color: var(--color-h3)">BOOLEANNOISE - 布尔噪声</span>
 **类型:** 二值噪声
 **特点:** 只有0和1两个值，产生黑白效果
