@@ -52,7 +52,11 @@ float pow4(float x)
 // 计算x的五次方
 float pow5(float x)
 { float x2 = x * x; return x2 * x2 * x; }
-
+// 计算向量的平方长度
+float lengthSqr(float2 p) 
+{ 
+    return dot(p,p); 
+}
 // 计算RGB颜色的亮度平均值
 float average(float3 color)
 { return dot(color, float3(0.3333, 0.3333, 0.3333)); }
@@ -102,6 +106,11 @@ float rand(float2 uv)
   float a = 12.9898, b = 78.233, c = 43758.5453;
   float dt = dot(uv.xy, float2(a,b)), sn = fmod(dt, PI);
   return frac(sin(sn) * c);
+}
+// 另一种2D随机数生成器
+float rand2(float2 p) 
+{ 
+    return frac(sin(frac(sin(p.x) * 43.13311) + p.y) * 31.0011); 
 }
 // ========================================
 // 插值函数
