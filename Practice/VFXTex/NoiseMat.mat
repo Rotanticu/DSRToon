@@ -25,10 +25,13 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _Intensity: 0.59
     - _NoiseFrequency: 54.1
     - _NoiseOctave: 4.07
     - _NoisePersistence: 49.6
-    - _TimeSpeed: 0
+    - _PowerExponent: 2.53
+    - _Size: 8.66
+    - _TimeSpeed: 0.87
     m_Colors:
     - _Vector: {r: 0.86, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
