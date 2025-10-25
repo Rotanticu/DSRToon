@@ -43,7 +43,7 @@ float vnoise(float2 p)
                  dot(vrand(i+float2(1.0,1.0)), f-float2(1.0,1.0)), u.x), u.y);
 }
 
-// Perlin噪声插值
+// Perlin噪声插值，之间使用特征点，没有使用梯度方向 属于Value Noise，不是Gradient Noise
 // 使用余弦插值生成Perlin噪声
 float plerp(float2 p)
 {
@@ -59,8 +59,52 @@ float plerp(float2 p)
 //                 rand(float2(i.x + 1.0, i.y + 1.0)));
 //   return cosine(cosine(v.x, v.y, f.x), cosine(v.z, v.w, f.x), f.y);
 }
+// 梯度方向生成函数
+float2 get_gradient(float2 grid_pos)
+{
+    float random = rand(grid_pos);
+    
+    // 4个预定义梯度方向
+    float2 gradients[4] = {
+        float2(1, 1),   // 右上
+        float2(-1, 1),  // 左上
+        float2(1, -1),  // 右下
+        float2(-1, -1)  // 左下
+    };
+    
+    int index = int(random * 4.0);
+    return gradients[index];
+}
+// Perlin噪声插值，使用梯度方向 是Gradient Noise
+// 使用余弦插值生成Perlin噪声
+float PerlinGradientNoise(float2 p)
+{
+  float2 i = floor(p);
+  float2 f = frac(p);
+  
+  // 计算4个顶点的梯度方向
+  float2 grad00 = get_gradient(i + float2(0.0, 0.0));
+  float2 grad10 = get_gradient(i + float2(1.0, 0.0));
+  float2 grad01 = get_gradient(i + float2(0.0, 1.0));
+  float2 grad11 = get_gradient(i + float2(1.0, 1.0));
+  
+  // 计算距离向量
+  float2 dist00 = f - float2(0.0, 0.0);
+  float2 dist10 = f - float2(1.0, 0.0);
+  float2 dist01 = f - float2(0.0, 1.0);
+  float2 dist11 = f - float2(1.0, 1.0);
+  
+  // 计算点积
+  float noise00 = dot(grad00, dist00);
+  float noise10 = dot(grad10, dist10);
+  float noise01 = dot(grad01, dist01);
+  float noise11 = dot(grad11, dist11);
+  
+  // 双线性插值
+  return bicosine(noise00, noise10, noise01, noise11, f.x, f.y);
+}
 
-// 参数化Perlin噪声
+// 参数化Perlin噪声，没有使用梯度方向 属于Value Noise，但是有分形噪声效果
 // 可自定义八度数、频率和持续性的Perlin噪声
 float pnoise(float2 p, int octave, float frequency, float persistence)
 {
@@ -68,7 +112,7 @@ float pnoise(float2 p, int octave, float frequency, float persistence)
   float maxAmplitude = EPSILON;
   float amplitude = 1.0;
   for (int i=0; i<NOISE_OCTAVE_MAX; i++)
-{
+  {
     if (i >= octave) break;
     t += plerp(p * frequency) * amplitude;
     frequency *= 2.0;
@@ -179,9 +223,9 @@ float iqnoise( in float2 x, float u, float v )
   float va = 0.0;
   float wt = 0.0;
   for( int j=-2; j<=2; j++ )
-{
+  {
     for( int i=-2; i<=2; i++ )
-{
+    {
       float2 g = float2( float(i),float(j) );
       float3 o = iqhash3( p + g )*float3(u,u,1.0);
       float2 r = g - f + o.xy;
@@ -254,6 +298,7 @@ float4 taylorInvSqrt(in float4 r)
   return 1.79284291400159 - 0.85373472095314 * r;
 }
 
+// Simplex Noise 2D 使用三角形而不是正方形，并且引入了梯度方向，但是没有分型
 float snoise(in float2 v)
 {
   const float4 C = float4(0.211324865405187, // (3.0-sqrt(3.0))/6.0
@@ -261,8 +306,8 @@ float snoise(in float2 v)
                      -0.577350269189626, // -1.0 + 2.0 * C.x
                       0.024390243902439); // 1.0 / 41.0
 // First corner
-  float2 i = floor(v + dot(v, C.yy) );
-  float2 x0 = v - i + dot(i, C.xx);
+  float2 i = floor(v + dot(v, C.yy) ); //网格坐标
+  float2 x0 = v - i + dot(i, C.xx); //三角形第一个顶点
 
 // Other corners
   float2 i1;
@@ -270,40 +315,45 @@ float snoise(in float2 v)
   //i1.y = 1.0 - i1.x;
   i1 = (x0.x > x0.y) ? float2(1.0, 0.0) : float2(0.0, 1.0);
   // x0 = x0 - 0.0 + 0.0 * C.xx ;
-  // x1 = x0 - i1 + 1.0 * C.xx ;
-  // x2 = x0 - 1.0 + 2.0 * C.xx ;
+  // x1 = x0 - i1 + 1.0 * C.xx ; //三角形第二个顶点 优化为x12.xy
+  // x2 = x0 - 1.0 + 2.0 * C.xx ;//三角形第三个顶点 优化为x12.zw
   float4 x12 = x0.xyxy + C.xxzz;
   x12.xy -= i1;
 
 // Permutations
   i = mod289(i); // Avoid truncation effects in permutation
-  float3 p = permute( permute( i.y + float3(0.0, i1.y, 1.0 ))
-+ i.x + float3(0.0, i1.x, 1.0 ));
-
-  float3 m = max(0.5 - float3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-  m = m*m ;
-  m = m*m ;
+  float3 p = permute( permute( i.y + float3(0.0, i1.y, 1.0 )) + i.x + float3(0.0, i1.x, 1.0 ));//计算三个0 ~ 289（17x17）的随机值
 
 // Gradients: 41 points uniformly over a line, mapped onto a diamond.
 // The ring size 17*17 = 289 is close to a multiple of 41 (41*7 = 287)
 
-  float3 x = 2.0 * frac(p * C.www) - 1.0;
-  float3 h = abs(x) - 0.5;
+  float3 x = 2.0 * frac(p * C.www) - 1.0; //离散化的41个梯度方向，范围-1~1
+  // 使用八面体约束做梯度方向归一化 |x| + |y| + |z| = 1
+  //代替球面约束：x² + y² + z² = 1 节省开方 x / sqrt(x.x² + x.y² + x.z²)
+  float3 h = abs(x) - 0.5; // 计算高度分量
   float3 ox = floor(x + 0.5);
-  float3 a0 = x - ox;
+  float3 a0 = x - ox;// 计算平面分量
+  //float3 gradient = float3(a0.x, a0.y, h);//八面体约束后的梯度方向
 
+
+  float3 m = max(0.5 - float3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+  m = m*m ;
+  m = m*m ;
 // Normalise gradients implicitly by scaling m
 // Approximation of: m *= inversesqrt( a0*a0 + h*h );
-  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h );
+  m *= 1.79284291400159 - 0.85373472095314 * ( a0*a0 + h*h ); //归一化的梯度方向，再把距离的四次方作为权重相乘
 
 // Compute final noise value at P
   float3 g;
+  // 等价于：dot(float3(a0.x, a0.y, h.x), float3(x0.x, x0.y, 0))
   g.x = a0.x * x0.x + h.x * x0.y;
+  // 等价于：dot(float3(a0.y, a0.z, h.y), float3(x12.x, x12.z, 0))
+  //        dot(float3(a0.z, a0.w, h.z), float3(x12.z, x12.w, 0))
   g.yz = a0.yz * x12.xz + h.yz * x12.yw;
   return 130.0 * dot(m, g);
 }
 
-
+//Perlin噪声的改进版本，使用单形（Simplex）四面体而不是方形网格
 float snoise(float3 v)
 {
 const float2  C = float2(1.0/6.0, 1.0/3.0);
