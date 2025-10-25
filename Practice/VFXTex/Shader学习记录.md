@@ -148,7 +148,9 @@ for (int xo=-1; xo <= 1; ++xo) // 3x3搜索网格
 **类型:** 二值噪声
 **特点:** 只有0和1两个值，产生黑白效果
 **用途:** 创建图案、掩码、点状效果
-
+```hlsl
+float lum = step(0.5, rand(floor(p*s)/s)); //只是先乘一个常数再floor再除以常数，结果用step二值化就行
+```
 ### <span style="color: var(--color-h3)">COHERENTNOISE - 相干噪声</span>
 **类型:** 基础噪声，基于Perlin/Value噪声
 **特点:** 连续平滑的噪声，相邻点之间有关联性
@@ -156,17 +158,17 @@ for (int xo=-1; xo <= 1; ++xo) // 3x3搜索网格
 
 ### <span style="color: var(--color-h3)">PERLINNOISE - Perlin噪声（经典噪声）</span>
 **类型:** 梯度噪声的经典实现
-**特点:** 由Ken Perlin在1983年发明的经典噪声算法，使用梯度向量和平滑插值
+**特点:** 由Ken Perlin在1983年发明的经典噪声算法，使用梯度向量和平滑插值 引入梯度，就能连变化的导数都连续
 **用途:** 自然地形生成 云层、烟雾效果 程序化纹理生成 几乎是所有程序化生成的基础
 **实现方式:** 使用floor将UV分隔为一个个方格，再用余弦插值在方格四个角插值。 通过多次循环，叠加不同粒度的噪声
 ```hlsl
-  for (int i=0; i<octave; i++)
-{
-    t += ((1.0 - abs(plerp(p * frequency))) * 2.0 - 1.0) * amplitude;
-    frequency *= 2.0;
-    maxAmplitude += amplitude;
-    amplitude *= persistence;
-  }
+  float2 i = floor(p);
+  float2 f = frac(p);
+  return bicosine(rand(i+float2(0.0,0.0)),
+                  rand(i+float2(1.0,0.0)),
+                  rand(i+float2(0.0,1.0)),
+                  rand(i+float2(1.0,1.0)), f.x, f.y);
+                  //这个版本只是值噪声，没有梯度方向
 ```
 ### <span style="color: var(--color-h3)">GRADIENTNOISE - 梯度噪声</span>
 **类型:** 基于梯度向量的噪声
@@ -175,6 +177,18 @@ for (int xo=-1; xo <= 1; ++xo) // 3x3搜索网格
 
 **用途:** Perlin噪声的核心，自然纹理生成
 
+**实现方式:** 简单来说，找到特征点（三角形顶点）→为每个特征点分配梯度方向→计算每个特征点的噪声值→权重计算→加权插值→分形叠加
+```hlsl
+float snoise(in float2 v) //太复杂了，我在NoiseLibrary里写了详细注释，去那里看吧
+// 使用时可以多个八度叠加
+for (int i = 0; i < octave; i++) {
+    t += snoise(p * frequency) * amplitude;
+    frequency *= 2.0;
+    maxAmplitude += amplitude;
+    amplitude *= persistence;
+}
+t / maxAmplitude;
+```
 ### <span style="color: var(--color-h3)">MARBLENOISE - 大理石噪声</span>
 **类型:** 基于Perlin噪声的变形效果
 
