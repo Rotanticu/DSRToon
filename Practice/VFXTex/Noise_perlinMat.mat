@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Noise_perlinMat
+  m_Name: Noise_PerlinMat
   m_Shader: {fileID: 4800000, guid: 20c97ec44c9beb445b2e889b21aa6a0d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -25,9 +25,9 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Lacunarity: 2
+    - _Lacunarity: 43.04
     - _Octaves: 4
-    - _Persistence: 0.5
+    - _Persistence: -0.21
     - _TimeSpeed: 0
     m_Colors: []
   m_BuildTextureStacks: []

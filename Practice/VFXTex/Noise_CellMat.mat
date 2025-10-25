@@ -25,9 +25,11 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Intensity: 1
-    - _PowerExponent: 1
-    - _Size: 30
+    - _Intensity: 1.09
+    - _Iterations: 1
+    - _PowerExponent: 2.88
+    - _RandomOffset: 1
+    - _Size: 11.22
     - _TimeSpeed: 0
     m_Colors: []
   m_BuildTextureStacks: []
