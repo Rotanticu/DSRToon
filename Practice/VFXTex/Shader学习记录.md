@@ -125,6 +125,36 @@ float dt = dot(uv.xy, float2(a, b));
 float sn = fmod(dt, PI);
 return frac(sin(sn) * c);
 ```
+### <span style="color: var(--color-h3)">BOOLEANNOISE - 布尔噪声</span>
+**类型:** 二值噪声
+**特点:** 对随机噪声进行分区和step,只有0和1两个值，产生黑白效果
+**用途:** 创建图案、掩码、点状效果
+```hlsl
+float lum = step(0.5, rand(floor(p*s)/s)); //只是先乘一个常数再floor再除以常数，结果用step二值化就行
+```
+
+
+### <span style="color: var(--color-h3)">TESSNOISE - 分型噪声</span>
+**类型:** 最简单的分型噪声
+
+**特点:** 产生随机叠加的分型图案
+
+**用途:** 污渍、云朵
+```hlsl
+    float2 base = uv;
+    float2 rotation = 0;
+    float theta = frac(_Time.y*_TimeSpeed);
+    float phase = .55;
+    float frequency = 0.5;
+    
+    for (int i=0; i<_Octaves; i++) {
+        base += rotation;
+        rotation = frac(base.wxyz - base.zwxy + theta);
+        rotation *= (1.0 - rotation);
+        base *= frequency;
+        base += base.wxyz * phase;
+    }
+```
 ### <span style="color: var(--color-h3)">CELLNOISE - 单元噪声</span>
 **类型:** 基于均匀分布的随机点最短距离的噪声
 **特点:** 类似SDF的实现原理，根据距离着色
@@ -143,13 +173,6 @@ for (int xo=-1; xo <= 1; ++xo) // 3x3搜索网格
         }
     }
 }
-```
-### <span style="color: var(--color-h3)">BOOLEANNOISE - 布尔噪声</span>
-**类型:** 二值噪声
-**特点:** 只有0和1两个值，产生黑白效果
-**用途:** 创建图案、掩码、点状效果
-```hlsl
-float lum = step(0.5, rand(floor(p*s)/s)); //只是先乘一个常数再floor再除以常数，结果用step二值化就行
 ```
 ### <span style="color: var(--color-h3)">COHERENTNOISE - 相干噪声</span>
 **类型:** 基础噪声，基于Perlin/Value噪声
@@ -196,13 +219,6 @@ t / maxAmplitude;
 
 **用途:** 大理石纹理 木纹效果 波纹、条纹图案 液体流动效果
 
-
-### <span style="color: var(--color-h3)">TESSNOISE - 棋盘噪声</span>
-**类型:** 规则图案噪声
-
-**特点:** 产生棋盘格或镶嵌图案
-
-**用途:** 地板纹理、图案设计
 
 ### <span style="color: var(--color-h3)">VORONOINOISE - Voronoi噪声</span>
 **类型:** 基于特征点距离的噪声
