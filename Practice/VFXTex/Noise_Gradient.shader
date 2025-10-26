@@ -7,6 +7,9 @@ Shader "VFXTex/Gradient_Noise"
         _IsColor("IsColor", Range(0, 1)) = 1
         _Delta("Delta", Float) = 0.01
         [IntRange] _GradientType("Gradient Type", Range(0, 12)) = 0
+        [IntRange] _Octave("Octave", Range(1, 10)) = 1
+        _Lacunarity("Lacunarity", Float) = 2.0
+        _Persistence("Persistence", Float) = 0.5
     }
     SubShader
     {
@@ -62,6 +65,9 @@ Shader "VFXTex/Gradient_Noise"
             float _IsColor;
             float _Delta;
             int _GradientType;
+            int _Octave;
+            float _Lacunarity;
+            float _Persistence;
             // http://g3d.cs.williams.edu/websvn/filedetails.php?repname=g3d&path=%2FG3D10%2Fdata-files%2Fshader%2Fgradient.glsl
             float3 hueGradient(float t) 
             {
@@ -135,11 +141,24 @@ Shader "VFXTex/Gradient_Noise"
 
             half4 frag (Varings IN) : SV_Target
             {
-                float2 uv = IN.uv * _NoiseScale;
-                float3 p = normal(float3(uv, _Time.y * _TimeSpeed), _Delta);
-                p = (p + 1.0) * 0.5;
-                float3 gray = rgb2gray(p);
-                float3 color = lerp(gray, (_GradientType == 0) ? hueGradient(gray) : (_GradientType == 1) ? techGradient(gray) : (_GradientType == 2) ? fireGradient(gray) : (_GradientType == 3) ? desertGradient(gray) : (_GradientType == 4) ? electricGradient(gray) : (_GradientType == 5) ? neonGradient(gray) : (_GradientType == 6) ? heatmapGradient(gray) : (_GradientType == 7) ? rainbowGradient(gray) : (_GradientType == 8) ? brightnessGradient(gray) : (_GradientType == 9) ? grayscaleGradient(gray) : (_GradientType == 10) ? stripeGradient(gray) : (_GradientType == 11) ? ansiGradient(gray) : (_GradientType == 12) ? p : gray, _IsColor);
+                float t = 0.0;
+                float maxAmplitude = EPSILON;
+                float amplitude = 1.0;
+                float frequency = 1.0;
+                float3 p = float3(IN.uv * _NoiseScale, _Time.y * _TimeSpeed);
+                for (int i = 0; i < _Octave; i++) 
+                {
+                    t += snoise(p * frequency) * amplitude;
+                    frequency *= _Lacunarity;
+                    maxAmplitude += amplitude;
+                    amplitude *= _Persistence;
+                }
+                t = t / maxAmplitude;
+                float gray = t;
+                //float3 p = normal(float3(uv, _Time.y * _TimeSpeed), _Delta);
+                //p = (p + 1.0) * 0.5;
+                //float3 gray = rgb2gray(p);
+                float3 color = lerp(gray, (_GradientType == 0) ? hueGradient(gray) : (_GradientType == 1) ? techGradient(gray) : (_GradientType == 2) ? fireGradient(gray) : (_GradientType == 3) ? desertGradient(gray) : (_GradientType == 4) ? electricGradient(gray) : (_GradientType == 5) ? neonGradient(gray) : (_GradientType == 6) ? heatmapGradient(gray) : (_GradientType == 7) ? rainbowGradient(gray) : (_GradientType == 8) ? brightnessGradient(gray) : (_GradientType == 9) ? grayscaleGradient(gray) : (_GradientType == 10) ? stripeGradient(gray) : (_GradientType == 11) ? ansiGradient(gray) : (_GradientType == 12) ? normal(p, _Delta) : gray, _IsColor);
                 return half4(color, 1);
             }
             ENDHLSL

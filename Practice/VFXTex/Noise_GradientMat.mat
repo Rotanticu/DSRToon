@@ -25,11 +25,14 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Delta: 0.24
+    - _Delta: 0.13
     - _GradientType: 12
     - _IsColor: 1
-    - _NoiseScale: 10.67
-    - _TimeSpeed: 0
+    - _Lacunarity: 2.43
+    - _NoiseScale: 4.28
+    - _Octave: 6
+    - _Persistence: 0.92
+    - _TimeSpeed: 0.79
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
