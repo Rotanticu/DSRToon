@@ -61,6 +61,11 @@ float lengthSqr(float2 p)
 float average(float3 color)
 { return dot(color, float3(0.3333, 0.3333, 0.3333)); }
 
+// 2D旋转矩阵
+float2x2 rotate2d(float angle)
+{
+  return float2x2(cos(angle), -sin(angle), sin(angle), cos(angle));
+}
 // ========================================
 // 坐标转换函数
 // ========================================

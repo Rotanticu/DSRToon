@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Noise_CellMat
-  m_Shader: {fileID: 4800000, guid: 11d63d47b25bd0047925291ab3f498d0, type: 3}
+  m_Name: Fractal_MandelbrotMat
+  m_Shader: {fileID: 4800000, guid: 9afb06323143bc74abf7f6600372c975, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -25,12 +25,11 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Intensity: 1.15
-    - _Iterations: 1
-    - _PowerExponent: 2.88
-    - _RandomOffset: 1
-    - _Size: 11.48
+    - _Frequency: 104.7
+    - _Octaves: 101
+    - _Scale: 1
     - _TimeSpeed: 0
-    m_Colors: []
+    m_Colors:
+    - _Offset: {r: 0, g: 0, b: 0.5, a: 0.5}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

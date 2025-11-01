@@ -213,9 +213,9 @@ for (int i = 0; i < octave; i++) {
 t / maxAmplitude;
 ```
 ### <span style="color: var(--color-h3)">MARBLENOISE - 大理石噪声</span>
-**类型:** 基于Perlin噪声的变形效果
+**类型:** 基于Simplex Noise的变形效果
 
-**特点:** 通过对噪声进行正弦变换，产生大理石的条纹效果
+**特点:** 通过对噪声做45度旋转，再进行正弦变换，产生大理石的条纹效果
 
 **用途:** 大理石纹理 木纹效果 波纹、条纹图案 液体流动效果
 

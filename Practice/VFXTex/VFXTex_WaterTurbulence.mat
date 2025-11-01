@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Noise_CellMat
-  m_Shader: {fileID: 4800000, guid: 11d63d47b25bd0047925291ab3f498d0, type: 3}
+  m_Name: VFXTex_WaterTurbulence
+  m_Shader: {fileID: 4800000, guid: 02312348dca69524ca17d212af75be5c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -25,12 +25,10 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Intensity: 1.15
-    - _Iterations: 1
-    - _PowerExponent: 2.88
-    - _RandomOffset: 1
-    - _Size: 11.48
-    - _TimeSpeed: 0
+    - _Intensity: 0.85
+    - _Iterations: 2
+    - _Size: 23.19
+    - _TimeSpeed: 0.8
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

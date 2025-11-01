@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Noise_CellMat
-  m_Shader: {fileID: 4800000, guid: 11d63d47b25bd0047925291ab3f498d0, type: 3}
+  m_Name: Noise_VoronoiMat
+  m_Shader: {fileID: 4800000, guid: e968c0c840c44894d8dc72ec9f965c59, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -25,11 +25,9 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Intensity: 1.15
-    - _Iterations: 1
-    - _PowerExponent: 2.88
-    - _RandomOffset: 1
-    - _Size: 11.48
+    - _Intensity: 1
+    - _NoiseFrequency: 1
+    - _Size: 11.5
     - _TimeSpeed: 0
     m_Colors: []
   m_BuildTextureStacks: []
